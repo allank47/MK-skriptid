@@ -1,0 +1,60 @@
+---
+- hosts: webservers
+  tasks:
+  
+
+
+
+
+  - name: creating wordpress DB
+    mysql_db:
+      name: wpdatabase
+      state: present
+
+
+
+  - name: wordpress user creation. user wpuser password qwerty
+    mysql_user:
+      name: wpuser
+      password: qwerty
+      priv: 'wpdatabase.*:ALL,GRANT'
+      state: present
+      check_implicit_admin: yes
+
+
+
+  - name: mysql restart
+    service: name=mysql state=restarted
+
+  - name: wordpress download
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: /var/www/html/
+      remote_src: yes
+
+  - name: wordpress owner change to wwwdata
+    file:
+      path: /var/www/html/wordpress/
+      state: directory
+      recurse: yes
+      owner: www-data
+
+
+
+
+  - name: configfile copying
+    command: cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+
+  - name: password changing
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="'password_here'" line="define( 'DB_PASSWORD', 'qwerty' );"
+
+
+  - name: username changing
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="'username_here'" line="define( 'DB_USER', 'wpuser' );"
+
+
+  - name: DB changing
+    lineinfile: dest=/var/www/html/wordpress/wp-config.php regexp="'database_name_here'" line="define( 'DB_NAME', 'wpdatabase' );"
+
+
+
