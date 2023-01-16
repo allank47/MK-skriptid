@@ -1,0 +1,36 @@
+- hosts: webservers
+  tasks:
+    - name: apache2 install
+      apt: name=apache2 update_cache=yes state=latest
+      
+
+    - name: Public html kataloogi loomine userile
+      file: 
+       path=/home/user/public_html
+       owner=user
+       group=user
+       mode=0755
+       state=directory
+
+
+    - name: lubame userdir mod
+      apache2_module: name=userdir state=present
+
+    - name: Index.html kopeerimine public_html kausta
+      copy:
+        src: /var/www/html/index.html
+        dest: /home/user/public_html/
+        remote_src: yes
+        owner: user
+        group: user
+   
+
+    - name: Apache2 Alglaadimine
+      service:
+        name: apache2
+        state: restarted
+
+
+    - name: index.html muutine
+      lineinfile: dest=/home/user/public_html/index.html regexp="Apache2 Ubuntu Default Page" line="USERi Lehekylg" state=present
+
