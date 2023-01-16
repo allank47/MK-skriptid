@@ -14,4 +14,4 @@ Selleks, et kasutada neid Ansible Playbooke, tuleb kasutajal see Ansiblesse lisa
 
 ## Probleemid
 
-Kui on probleeme siis kontakteeruge Githubis @allank47
+Kui on probleeme siis kontakteeruge Githubis repositooriumi omaniku kasutajaga @allank47
