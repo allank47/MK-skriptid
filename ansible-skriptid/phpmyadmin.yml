@@ -1,0 +1,25 @@
+---
+- hosts: webservers
+  tasks:
+    - name: phpmyadmin install
+      command: apt-get install php php-cgi php-mysqli php-pear php-mbstring php-gettext libapache2-mod-php php-common php-phpseclib php-mysql -y
+    - name: wget kasud
+      command: wget -P /home/user/Downloads https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+      command: wget -P /home/user/Downloads https://files.phpmyadmin.net/phpmyadmin.keyring
+      command: gpg --import /home/user/Downloads/phpmyadmin.keyring
+      command: wget -P /home/user/Downloads https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+
+    - name: php extract
+      command: tar xvf /home/user/Downloads/phpMyAdmin-latest-all-languages.tar.gz --strip-components=1 -C /var/www/html/phpmyadmin   
+
+
+    - name: php näidiskonfi kopeerimine
+      command: cp /var/www/html/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
+ 
+
+    - name: chmod load
+      command: chmod 660 /var/www/html/phpmyadmin/config.inc.php
+    
+
+    - name: apache2 restart
+      command: systemctl restart apache2
