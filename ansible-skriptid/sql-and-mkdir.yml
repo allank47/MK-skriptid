@@ -1,0 +1,62 @@
+---
+- hosts: webservers
+  tasks:
+  - name: Allalaadimise kaust
+    file:
+      path=/root/allalaadimised
+      owner=root
+      group=root
+      mode=0755
+      state=directory
+
+
+
+  - name: mysqli allalaadimine
+    get_url:
+      url: http://repo.mysql.com/mysql-apt-config_0.8.8-1_all.deb
+      dest: "/root/allalaadimised"
+      mode: 0440
+
+ 
+
+
+
+  - name: mysql repo install
+    apt: "deb=/root/allalaadimised/mysql-apt-config_0.8.8-1_all.deb"
+
+  - name: mysqli install
+    apt: name=mysql-server force=yes update_cache=yes state=present
+
+
+  - name: python mysqldb install
+    apt: name=python-mysqldb update_cache=yes state=latest
+
+
+
+  - name: Root Login Fail
+    copy:
+      dest: /root/.my.cnf
+      owner: root
+      group: root
+      mode: 0600
+      content: |
+          [client]
+          user=root
+          password=qwerty
+  
+  
+  
+  
+  
+  
+  - name: Mysql root kasutaja loomine.
+    mysql_user:
+      name: root
+      password: qwerty
+      priv: '*.*:ALL,GRANT'
+      state: present
+      
+
+  - name: SQL alglaadimine
+    service: name=mysql state=restarted
+
